@@ -25,13 +25,23 @@ document.addEventListener('DOMContentLoaded', function() {
       "param1V": prm1v.value,
       "param2N": prm2n.value,
       "param2V": prm2v.value}, function(){});
-    chrome.tabs.executeScript({
-      code: "var myScript = document.createElement('script');"
-        + 'myScript.textContent = \'(async () => { await $flutterDriver(\\\'{"command": "request_data", "message": '
-        + '"{' + magicQuote + 'command' + magicQuote + ': ' + command + ', ' + param1N + ': ' + param1V + ', ' + param2N + ': ' + param2V + '}"}\\\'); console.log($flutterDriverResult);})();\';'
-        + "document.head.appendChild(myScript);"
-    }, (results) => {
-    });
+    if (document.getElementById('jsonPayload').checked) {
+      chrome.tabs.executeScript({
+        code: "var myScript = document.createElement('script');"
+          + 'myScript.textContent = \'(async () => { await $flutterDriver(\\\'{"command": "request_data", "message": '
+          + '"{' + magicQuote + 'command' + magicQuote + ': ' + command + ', ' + param1N + ': ' + param1V + ', ' + param2N + ': ' + param2V + '}"}\\\'); console.log($flutterDriverResult);})();\';'
+          + "document.head.appendChild(myScript);"
+      }, (results) => {
+      });
+    } else if (document.getElementById('rawPayload').checked) {
+      chrome.tabs.executeScript({
+        code: "var myScript = document.createElement('script');"
+          + 'myScript.textContent = \'(async () => { await $flutterDriver(\\\'{"command": "request_data", "message": '
+          + '"' + cmd.value + '"}\\\'); console.log($flutterDriverResult);})();\';'
+          + "document.head.appendChild(myScript);"
+      }, (results) => {
+      });
+    }
   }, false);
 }, false);
 
